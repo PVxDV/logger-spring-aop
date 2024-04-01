@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    username: log
+    password: password
+    driver-class-name: org.postgresql.Driver
+    name: logger-aop-db
+    url: jdbc:postgresql://localhost:5432/logger-aop-db
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: create-drop
+    generate-ddl: true
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

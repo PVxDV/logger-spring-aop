@@ -2,7 +2,7 @@ volumes:
   logger-aop-db-pg:
 
 services:
-  slogger-aop-db:
+  logger-aop-db:
     image: postgres:latest
     restart: on-failure
     environment:
@@ -13,8 +13,15 @@ services:
       - logger-aop-db-pg:/var/lib/postgresql/data
     ports:
       - "127.0.0.1:5432:5432"
-    networks:
-      suppliercosumer:
 
-networks:
-  suppliercosumer:
+  logger-aop-app:
+    container_name: logger-app
+    restart: always
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - logger-aop-db
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://logger-aop-db:5432/logger-aop-db'
+      JAVA_OPTS: '-Xmx512m'

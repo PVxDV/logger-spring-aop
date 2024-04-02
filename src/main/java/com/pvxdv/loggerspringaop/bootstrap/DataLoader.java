@@ -6,7 +6,6 @@ import com.pvxdv.loggerspringaop.model.Order;
 import com.pvxdv.loggerspringaop.model.User;
 import com.pvxdv.loggerspringaop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class DataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
 
@@ -27,7 +25,6 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadData() {
-        log.info("Load users with orders.....");
         User vanya = User.builder()
                 .name("Ivan")
                 .email("Ivan@mail.ru")

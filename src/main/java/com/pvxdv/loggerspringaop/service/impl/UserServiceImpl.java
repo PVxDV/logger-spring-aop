@@ -10,12 +10,11 @@ import com.pvxdv.loggerspringaop.model.User;
 import com.pvxdv.loggerspringaop.repository.UserRepository;
 import com.pvxdv.loggerspringaop.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -23,32 +22,22 @@ public class UserServiceImpl implements UserService {
     private final CreateOrUpdateUserDtoToUserMapper createOrUpdateUserDtoToUserMapper;
     private final UserToUserDtoMapper userToUserDtoMapper;
     private final String USER_NOT_FOUND = "User with id=%d not found";
-    private final String SAVE_USER = "Saving user=%s";
 
     @Override
     public UserDto createUser(CreateOrUpdateUserDto userDto) {
         User userToSave = createOrUpdateUserDtoToUserMapper.map(userDto);
-        log.debug(SAVE_USER.formatted(userToSave));
-
         return userToUserDtoMapper.map(userRepository.save(userToSave));
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        List<UserDto> users = userRepository.findAll()
-                .stream()
-                .map(userToUserDtoMapper::map)
-                .toList();
-        log.debug("Find users: %s".formatted(users));
-        return users;
+        return  userRepository.findAll().stream().map(userToUserDtoMapper::map).toList();
     }
 
     @Override
     public UserDto getUserById(Long userId) {
-        UserDto user = userToUserDtoMapper.map(userRepository.findById(userId)
+        return userToUserDtoMapper.map(userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND.formatted(userId))));
-        log.debug("Find user: %s".formatted(user));
-        return user;
     }
 
     @Override
@@ -64,7 +53,6 @@ public class UserServiceImpl implements UserService {
                 userToUpdate.setEmail(userDto.email());
             }
 
-            log.debug(SAVE_USER.formatted(userToUpdate));
             userRepository.save(userToUpdate);
         } else {
             throw new ResourceNotFoundException(USER_NOT_FOUND.formatted(userId));
@@ -75,7 +63,6 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long userId) {
         if (userExist(userId)) {
             userRepository.deleteById(userId);
-            log.debug("User with id=%d delete successfully".formatted(userId));
         } else {
             throw new ResourceNotFoundException(USER_NOT_FOUND.formatted(userId));
         }
